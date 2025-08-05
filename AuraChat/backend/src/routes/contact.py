@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from config.database import get_db
 from models.base_models import Contact # Use the actual model
-from services.webhook_service import trigger_webhook, WebhookEvent # Import webhook trigger
+from services.webhook_service import trigger_webhook # Import webhook trigger
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import datetime
 import logging
@@ -141,7 +141,7 @@ def create_contact():
                 "email": new_contact.email,
                 "created_at": new_contact.created_at.isoformat() if new_contact.created_at else None
             }
-            trigger_webhook(WebhookEvent.CONTACT_CREATED, contact_payload)
+            trigger_webhook("CONTACT_CREATED", contact_payload)
         except Exception as webhook_e:
              logger.error(f"Failed to trigger CONTACT_CREATED webhook for contact {new_contact.id}: {webhook_e}")
 
@@ -209,7 +209,7 @@ def update_contact(contact_id: int):
                 "updated_at": contact.updated_at.isoformat() if contact.updated_at else None,
                 "changed_fields": updated_fields
             }
-            trigger_webhook(WebhookEvent.CONTACT_UPDATED, contact_payload)
+            trigger_webhook("CONTACT_UPDATED", contact_payload)
         except Exception as webhook_e:
              logger.error(f"Failed to trigger CONTACT_UPDATED webhook for contact {contact.id}: {webhook_e}")
 

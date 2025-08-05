@@ -30,7 +30,7 @@ celery_app.conf.update(
 # Example (adjust based on actual Flask app structure in main.py):
 # class ContextTask(celery_app.Task):
 #     def __call__(self, *args, **kwargs):
-#         from src.main import app # Import Flask app instance
+#         from main import app # Import Flask app instance
 #         with app.app_context():
 #             return self.run(*args, **kwargs)
 # celery_app.Task = ContextTask

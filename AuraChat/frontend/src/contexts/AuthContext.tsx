@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import apiService from '../services/api';
 
 interface User {
   id: string;
@@ -48,22 +49,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (authToken: string) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        // Token inválido ou expirado
-        localStorage.removeItem('aura_token');
-        setToken(null);
-      }
+      const userData = await apiService.getProfile();
+      setUser(userData);
     } catch (error) {
       console.error('Erro ao buscar perfil do usuário:', error);
+      // Token inválido ou expirado
+      localStorage.removeItem('aura_token');
+      setToken(null);
     } finally {
       setIsLoading(false);
     }
@@ -72,19 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (!response.ok) {
-        throw new Error('Credenciais inválidas');
-      }
-
-      const data = await response.json();
+      const data = await apiService.login(email, password);
       localStorage.setItem('aura_token', data.token);
       setToken(data.token);
       setUser(data.user);
@@ -99,19 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, email, password })
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao registrar usuário');
-      }
-
-      const data = await response.json();
+      const data = await apiService.register(name, email, password);
       localStorage.setItem('aura_token', data.token);
       setToken(data.token);
       setUser(data.user);

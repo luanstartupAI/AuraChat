@@ -1,0 +1,25 @@
+nohup: ignoring input
+2025-08-05 11:01:39,629 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:39,629 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'main_simple'
+ * Debug mode: on
+2025-08-05 11:01:39,634 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 11:01:39,634 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 11:01:39,634 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:01:39,929 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:39,930 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:01:39,933 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:01:39,933 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:01:42,659 - __main__ - INFO - Health check endpoint called.
+/workspace/AuraChat/backend/src/main_simple.py:71: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+2025-08-05 11:01:42,659 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:01:42] "GET /api/health HTTP/1.1" 200 -
+2025-08-05 11:01:51,758 - routes.contact_simple - INFO - Retrieved 0 contacts (page 1, limit 20, search: ''). Total: 0
+2025-08-05 11:01:51,759 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:01:51] "GET /api/contact/contacts HTTP/1.1" 200 -
+2025-08-05 11:02:00,066 - routes.contact_simple - INFO - Created new contact: 73020413-bb58-46be-88d9-2a30aea6b2ab
+2025-08-05 11:02:00,066 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:02:00] "[35m[1mPOST /api/contact/contacts HTTP/1.1[0m" 201 -
+2025-08-05 11:02:06,132 - routes.contact_simple - INFO - Retrieved 1 contacts (page 1, limit 20, search: ''). Total: 1
+2025-08-05 11:02:06,132 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:02:06] "GET /api/contact/contacts HTTP/1.1" 200 -

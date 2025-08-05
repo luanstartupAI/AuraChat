@@ -3,6 +3,7 @@ import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
 import Window from '../components/layout/Window';
 import { useAuth } from '../contexts/AuthContext';
+import apiService from '../services/api';
 import '../styles/theme.css';
 
 const Dashboard: React.FC = () => {
@@ -18,28 +19,43 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulação de carregamento de dados
     const fetchDashboardData = async () => {
       try {
-        // Em produção, isso seria uma chamada real à API
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Buscar dados reais da API
+        const [chatStats, contactsData] = await Promise.all([
+          apiService.getChatStats(),
+          apiService.getContacts(1, 5) // Buscar apenas 5 contatos para o dashboard
+        ]);
         
         setStats({
-          totalContacts: 1248,
-          activeChats: 37,
-          pendingTasks: 12,
-          completedFlows: 89
+          totalContacts: contactsData.pagination.total,
+          activeChats: chatStats.active_conversations,
+          pendingTasks: 0, // TODO: Implementar quando tivermos Kanban
+          completedFlows: 0 // TODO: Implementar quando tivermos Fluxos
         });
         
-        setRecentChats([
-          { id: 1, name: 'João Silva', lastMessage: 'Olá, preciso de ajuda com meu pedido', time: '10:45', unread: 2 },
-          { id: 2, name: 'Maria Oliveira', lastMessage: 'Obrigada pelo atendimento!', time: '09:30', unread: 0 },
-          { id: 3, name: 'Pedro Santos', lastMessage: 'Quando meu produto será entregue?', time: 'Ontem', unread: 1 },
-          { id: 4, name: 'Ana Costa', lastMessage: 'Vou verificar e te retorno', time: 'Ontem', unread: 0 },
-          { id: 5, name: 'Carlos Mendes', lastMessage: 'Preciso cancelar minha assinatura', time: 'Seg', unread: 3 }
-        ]);
+        // Converter contatos para formato de conversas recentes
+        const recentChatsData = contactsData.contacts.map(contact => ({
+          id: contact.id,
+          name: contact.name,
+          lastMessage: 'Nova conversa iniciada',
+          time: new Date(contact.created_at).toLocaleTimeString('pt-BR', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          }),
+          unread: 0
+        }));
+        
+        setRecentChats(recentChatsData);
       } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
+        // Fallback para dados mock em caso de erro
+        setStats({
+          totalContacts: 0,
+          activeChats: 0,
+          pendingTasks: 0,
+          completedFlows: 0
+        });
       } finally {
         setIsLoading(false);
       }
