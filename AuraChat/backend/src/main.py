@@ -11,17 +11,9 @@ from dotenv import load_dotenv
 
 # Importar rotas
 from routes.auth import auth_bp
-from routes.chat import chat_bp
+from routes.chat_simple import chat_bp
+from routes.contact_simple import contact_bp
 from routes.whatsapp import whatsapp_bp
-from routes.kanban import kanban_bp
-from routes.flow import flow_bp
-from routes.automation import automation_bp
-from routes.broadcast import broadcast_bp
-from routes.audience import audience_bp
-from routes.contact import contact_bp
-from routes.group import group_bp
-from routes.settings import settings_bp
-from routes.ai import ai_bp
 
 # Configuração de logging
 logging.basicConfig(
@@ -63,16 +55,8 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 # Registrar blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(chat_bp, url_prefix='/api/chat')
-app.register_blueprint(whatsapp_bp, url_prefix='/api/whatsapp')
-app.register_blueprint(kanban_bp, url_prefix='/api/kanban')
-app.register_blueprint(flow_bp, url_prefix='/api/flow')
-app.register_blueprint(automation_bp, url_prefix='/api/automation')
-app.register_blueprint(broadcast_bp, url_prefix='/api/broadcast')
-app.register_blueprint(audience_bp, url_prefix='/api/audience')
 app.register_blueprint(contact_bp, url_prefix='/api/contact')
-app.register_blueprint(group_bp, url_prefix='/api/group')
-app.register_blueprint(settings_bp, url_prefix='/api/settings')
-app.register_blueprint(ai_bp, url_prefix='/api/ai')
+app.register_blueprint(whatsapp_bp, url_prefix='/api/whatsapp')
 
 # Rota de verificação de saúde
 @app.route("/api/health", methods=["GET"])
@@ -86,16 +70,8 @@ def health_check():
         "modules": {
             "auth": "active",
             "chat": "active",
-            "whatsapp": "active",
-            "kanban": "active",
-            "flow": "active",
-            "automation": "active",
-            "broadcast": "active",
-            "audience": "active",
             "contact": "active",
-            "group": "active",
-            "settings": "active",
-            "ai": "active"
+            "whatsapp": "active"
         }
     })
 

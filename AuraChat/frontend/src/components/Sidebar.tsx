@@ -10,7 +10,8 @@ import {
   Users, 
   UserCircle, 
   Gear, 
-  Question 
+  Question,
+  Phone
 } from 'phosphor-react';
 
 interface SidebarProps {
@@ -25,6 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
   const menuItems = [
     { path: '/', label: 'Dashboard', icon: <House size={iconSize} weight={iconWeight} /> },
     { path: '/chat', label: 'Bate Papo', icon: <ChatCircle size={iconSize} weight={iconWeight} /> },
+    { path: '/whatsapp', label: 'WhatsApp', icon: <Phone size={iconSize} weight={iconWeight} /> },
     { path: '/kanban', label: 'Kanban', icon: <Kanban size={iconSize} weight={iconWeight} /> },
     { path: '/ai', label: 'Atendimento (IA)', icon: <Robot size={iconSize} weight={iconWeight} /> },
     { path: '/flows', label: 'Fluxos de Conversa', icon: <FlowArrow size={iconSize} weight={iconWeight} /> },

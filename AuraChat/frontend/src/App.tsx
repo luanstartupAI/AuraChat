@@ -7,6 +7,7 @@ import Chat from './pages/Chat';
 import Kanban from './pages/Kanban';
 import FlowEditor from './pages/FlowEditor';
 import AIAssistant from './pages/AIAssistant';
+import WhatsApp from './pages/WhatsApp';
 import './App.css';
 import './styles/theme.css';
 
@@ -68,6 +69,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AIAssistant />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/whatsapp" 
+            element={
+              <ProtectedRoute>
+                <WhatsApp />
               </ProtectedRoute>
             } 
           />
