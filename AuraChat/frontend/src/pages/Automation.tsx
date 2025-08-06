@@ -1,305 +1,338 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-    getWebhooks, createWebhook, updateWebhook, deleteWebhook
-} from '@/services/automationService';
-import { Button } from "@/components/ui/button";
-import {
-    Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
-import {
-    Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/hooks/use-toast";
-import { PlusCircle, Edit, Trash2, Copy, Check } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
-
-// Define available webhook events (should match backend Enum)
-const WEBHOOK_EVENTS = [
-    { value: "message.received", label: "Mensagem Recebida" },
-    { value: "message.sent", label: "Mensagem Enviada" },
-    { value: "contact.created", label: "Contato Criado" },
-    { value: "contact.updated", label: "Contato Atualizado" },
-    { value: "group.updated", label: "Grupo Atualizado" },
-    // Add other events as they become available
-];
-
-interface Webhook {
-    id: number;
-    url: string;
-    event: string;
-    is_active: boolean;
-    has_secret?: boolean; // From API response
-    secret?: string; // Only available on creation response
-    created_at?: string;
-}
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Play, 
+  Pause, 
+  Plus, 
+  Settings, 
+  Bot, 
+  Zap, 
+  GitBranch, 
+  Clock,
+  Brain,
+  Webhook,
+  Variable,
+  FileText,
+  MessageSquare,
+  Send,
+  Filter,
+  Timer,
+  Eye,
+  Edit,
+  Trash2
+} from 'lucide-react';
+import FlowEditor from '@/components/automation/FlowEditor';
 
 const Automation: React.FC = () => {
-    const [webhooks, setWebhooks] = useState<Webhook[]>([]);
-    const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-    
-    // Form state
-    const [currentUrl, setCurrentUrl] = useState("");
-    const [currentEvent, setCurrentEvent] = useState("");
-    const [currentIsActive, setCurrentIsActive] = useState(true);
-    const [generateSecret, setGenerateSecret] = useState(false);
-    const [createdSecret, setCreatedSecret] = useState<string | null>(null);
-    const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState('flows');
+  const [showEditor, setShowEditor] = useState(false);
 
-    const fetchWebhooks = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const fetchedWebhooks = await getWebhooks();
-            setWebhooks(fetchedWebhooks || []);
-        } catch (error) {
-            toast({ title: "Erro", description: "Falha ao buscar webhooks.", variant: "destructive" });
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
+  const activeFlows = 3;
+  const totalFlows = 8;
+  const executionsToday = 1247;
 
-    useEffect(() => {
-        fetchWebhooks();
-    }, [fetchWebhooks]);
+  const nodeTypes = [
+    { type: 'trigger', label: 'Gatilhos', icon: Zap, color: 'bg-yellow-100 text-yellow-600', count: 4 },
+    { type: 'action', label: 'Ações', icon: Send, color: 'bg-blue-100 text-blue-600', count: 12 },
+    { type: 'condition', label: 'Condições', icon: GitBranch, color: 'bg-purple-100 text-purple-600', count: 6 },
+    { type: 'delay', label: 'Atrasos', icon: Clock, color: 'bg-orange-100 text-orange-600', count: 3 },
+    { type: 'ai', label: 'IA', icon: Brain, color: 'bg-green-100 text-green-600', count: 8 },
+    { type: 'webhook', label: 'Webhooks', icon: Webhook, color: 'bg-red-100 text-red-600', count: 5 },
+    { type: 'variable', label: 'Variáveis', icon: Variable, color: 'bg-indigo-100 text-indigo-600', count: 7 },
+    { type: 'template', label: 'Templates', icon: FileText, color: 'bg-pink-100 text-pink-600', count: 9 }
+  ];
 
-    const resetForm = () => {
-        setCurrentUrl("");
-        setCurrentEvent("");
-        setCurrentIsActive(true);
-        setGenerateSecret(false);
-        setCreatedSecret(null);
-        setCopied(false);
-    };
+  const recentFlows = [
+    {
+      id: '1',
+      name: 'Boas-vindas Automática',
+      description: 'Envia mensagem de boas-vindas para novos contatos',
+      status: 'active',
+      executions: 156,
+      lastExecuted: '2 min atrás'
+    },
+    {
+      id: '2',
+      name: 'Suporte Inteligente',
+      description: 'Classifica e direciona solicitações de suporte',
+      status: 'active',
+      executions: 89,
+      lastExecuted: '5 min atrás'
+    },
+    {
+      id: '3',
+      name: 'Follow-up de Vendas',
+      description: 'Acompanha leads após demonstração',
+      status: 'paused',
+      executions: 23,
+      lastExecuted: '1 hora atrás'
+    }
+  ];
 
-    const handleOpenModal = (mode: 'create' | 'edit', webhook: Webhook | null = null) => {
-        setModalMode(mode);
-        setSelectedWebhook(webhook);
-        setCurrentUrl(webhook?.url || "");
-        setCurrentEvent(webhook?.event || "");
-        setCurrentIsActive(webhook?.is_active ?? true);
-        setGenerateSecret(false); // Reset secret generation option
-        setCreatedSecret(null); // Clear any previously created secret
-        setCopied(false);
-        setIsModalOpen(true);
-    };
+  if (showEditor) {
+    return <FlowEditor />;
+  }
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedWebhook(null);
-        resetForm();
-    };
-
-    const handleSaveWebhook = async () => {
-        setIsLoading(true);
-        setCreatedSecret(null); // Clear previous secret before saving
-        setCopied(false);
-
-        try {
-            if (modalMode === 'create') {
-                const payload = {
-                    url: currentUrl,
-                    event: currentEvent,
-                    generate_secret: generateSecret,
-                };
-                const response = await createWebhook(payload);
-                if (response.webhook?.secret) {
-                    setCreatedSecret(response.webhook.secret);
-                }
-                toast({ title: "Sucesso", description: "Webhook criado com sucesso." });
-                // Keep modal open if secret was generated, otherwise close
-                if (!response.webhook?.secret) {
-                    handleCloseModal();
-                }
-            } else if (selectedWebhook) {
-                const payload = {
-                    url: currentUrl,
-                    is_active: currentIsActive,
-                    // Event cannot be updated via PUT in the current backend implementation
-                };
-                await updateWebhook(selectedWebhook.id, payload);
-                toast({ title: "Sucesso", description: "Webhook atualizado com sucesso." });
-                handleCloseModal();
-            }
-            fetchWebhooks(); // Refresh list
-        } catch (error: any) {
-            const errorMsg = error.response?.data?.message || `Falha ao ${modalMode === 'create' ? 'criar' : 'atualizar'} webhook.`;
-            toast({ title: "Erro", description: errorMsg, variant: "destructive" });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleDeleteWebhook = async (webhookId: number) => {
-        if (!window.confirm("Tem certeza que deseja excluir este webhook?")) return;
-        setIsLoading(true);
-        try {
-            await deleteWebhook(webhookId);
-            toast({ title: "Sucesso", description: "Webhook excluído com sucesso." });
-            fetchWebhooks(); // Refresh list
-        } catch (error) {
-            toast({ title: "Erro", description: "Falha ao excluir webhook.", variant: "destructive" });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleCopyToClipboard = () => {
-        if (createdSecret) {
-            navigator.clipboard.writeText(createdSecret).then(() => {
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000); // Reset copied state after 2s
-            }, (err) => {
-                toast({ title: "Erro", description: "Falha ao copiar o segredo.", variant: "destructive" });
-                console.error('Could not copy text: ', err);
-            });
-        }
-    };
-
-    return (
-        <div className="p-4 md:p-6 lg:p-8">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold">Automação - Webhooks</h1>
-                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                    <DialogTrigger asChild>
-                        <Button onClick={() => handleOpenModal('create')}>
-                            <PlusCircle className="mr-2 h-4 w-4" /> Novo Webhook
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-lg">
-                        <DialogHeader>
-                            <DialogTitle>{modalMode === 'create' ? 'Criar Novo Webhook' : 'Editar Webhook'}</DialogTitle>
-                            <DialogDescription>
-                                {modalMode === 'create' ? 'Configure um novo webhook para receber notificações de eventos.' : 'Edite a URL ou o status do webhook.'}
-                            </DialogDescription>
-                        </DialogHeader>
-                        
-                        {createdSecret ? (
-                            <div className="py-4 space-y-4">
-                                <p className="text-sm font-medium text-green-600">Webhook criado com sucesso!</p>
-                                <Label>Segredo Gerado (Copie Agora)</Label>
-                                <div className="flex items-center space-x-2">
-                                    <Input value={createdSecret} readOnly className="font-mono" />
-                                    <Button variant="outline" size="icon" onClick={handleCopyToClipboard} title="Copiar Segredo">
-                                        {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                                    </Button>
-                                </div>
-                                <p className="text-xs text-destructive">Atenção: Este segredo não será exibido novamente. Copie-o e guarde-o em local seguro.</p>
-                            </div>
-                        ) : (
-                            <div className="grid gap-4 py-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="webhookUrl">URL do Webhook</Label>
-                                    <Input id="webhookUrl" value={currentUrl} onChange={(e) => setCurrentUrl(e.target.value)} placeholder="https://seu-servidor.com/webhook" disabled={isLoading} />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="webhookEvent">Evento Gatilho</Label>
-                                    <Select 
-                                        value={currentEvent}
-                                        onValueChange={setCurrentEvent}
-                                        disabled={isLoading || modalMode === 'edit'} // Event usually not editable
-                                    >
-                                        <SelectTrigger id="webhookEvent" disabled={modalMode === 'edit'}>
-                                            <SelectValue placeholder="Selecione um evento" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {WEBHOOK_EVENTS.map(event => (
-                                                <SelectItem key={event.value} value={event.value}>{event.label}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    {modalMode === 'edit' && <p className="text-xs text-muted-foreground">O evento não pode ser alterado. Crie um novo webhook se necessário.</p>}
-                                </div>
-                                {modalMode === 'create' && (
-                                    <div className="flex items-center space-x-2 pt-2">
-                                        <Checkbox id="generateSecret" checked={generateSecret} onCheckedChange={(checked) => setGenerateSecret(Boolean(checked))} disabled={isLoading} />
-                                        <Label htmlFor="generateSecret" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            Gerar Segredo de Verificação?
-                                        </Label>
-                                    </div>
-                                )}
-                                {modalMode === 'edit' && (
-                                    <div className="flex items-center space-x-2 pt-2">
-                                        <Switch id="webhookActive" checked={currentIsActive} onCheckedChange={setCurrentIsActive} disabled={isLoading} />
-                                        <Label htmlFor="webhookActive">Ativo</Label>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                        
-                        <DialogFooter>
-                            <Button variant="outline" onClick={handleCloseModal}>Cancelar</Button>
-                            {!createdSecret && (
-                                <Button onClick={handleSaveWebhook} disabled={isLoading || !currentUrl || (modalMode === 'create' && !currentEvent)}>
-                                    {isLoading ? 'Salvando...' : (modalMode === 'create' ? 'Criar Webhook' : 'Salvar Alterações')}
-                                </Button>
-                            )}
-                            {createdSecret && (
-                                 <Button onClick={handleCloseModal}>Fechar</Button>
-                            )}
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
-
-            {isLoading && webhooks.length === 0 ? (
-                <p>Carregando webhooks...</p>
-            ) : (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>URL</TableHead>
-                            <TableHead>Evento</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Segredo</TableHead>
-                            <TableHead className="text-right">Ações</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {webhooks.map((webhook) => (
-                            <TableRow key={webhook.id}>
-                                <TableCell className="font-mono text-sm max-w-xs truncate" title={webhook.url}>{webhook.url}</TableCell>
-                                <TableCell>{WEBHOOK_EVENTS.find(e => e.value === webhook.event)?.label || webhook.event}</TableCell>
-                                <TableCell>
-                                    <Badge variant={webhook.is_active ? 'default' : 'outline'}>
-                                        {webhook.is_active ? 'Ativo' : 'Inativo'}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    {webhook.has_secret ? (
-                                        <Badge variant="secondary">Configurado</Badge>
-                                    ) : (
-                                        <Badge variant="outline">Nenhum</Badge>
-                                    )}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon" onClick={() => handleOpenModal('edit', webhook)} title="Editar Webhook">
-                                        <Edit className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => handleDeleteWebhook(webhook.id)} disabled={isLoading} title="Excluir Webhook">
-                                        <Trash2 className="h-4 w-4 text-red-500" />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            )}
-            
-            {/* Section for Automation Rules (Placeholder) */}
-            {/* <div className="mt-12">
-                <h2 className="text-xl font-semibold mb-4">Regras de Automação (Em Breve)</h2>
-                <p className="text-muted-foreground">Gerencie regras para automatizar ações baseadas em gatilhos.</p>
-            </div> */}
-
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Automações</h1>
+          <p className="text-gray-600">Crie fluxos inteligentes para automatizar seu WhatsApp</p>
         </div>
-    );
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => setShowEditor(true)}
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Fluxo
+        </Button>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="flows">Fluxos</TabsTrigger>
+          <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="flows" className="space-y-6">
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Bot className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Fluxos Ativos</p>
+                    <p className="text-2xl font-bold">{activeFlows}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-8 h-8 text-green-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Total de Fluxos</p>
+                    <p className="text-2xl font-bold">{totalFlows}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Play className="w-8 h-8 text-purple-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Execuções Hoje</p>
+                    <p className="text-2xl font-bold">{executionsToday}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Settings className="w-8 h-8 text-orange-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Taxa de Sucesso</p>
+                    <p className="text-2xl font-bold">98.5%</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Node Types */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bot className="w-5 h-5 mr-2" />
+                  Tipos de Nós
+                </CardTitle>
+                <CardDescription>
+                  Blocos disponíveis para criar automações
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {nodeTypes.map((node) => (
+                    <div key={node.type} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg ${node.color}`}>
+                          <node.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="font-medium">{node.label}</div>
+                          <div className="text-sm text-gray-500">{node.count} nós criados</div>
+                        </div>
+                      </div>
+                      <Badge variant="outline">{node.type}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Flows */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Zap className="w-5 h-5 mr-2" />
+                  Fluxos Recentes
+                </CardTitle>
+                <CardDescription>
+                  Seus fluxos de automação mais ativos
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentFlows.map((flow) => (
+                    <div key={flow.id} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-medium">{flow.name}</h4>
+                          <p className="text-sm text-gray-600 mt-1">{flow.description}</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                            <span>{flow.executions} execuções</span>
+                            <span>{flow.lastExecuted}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge 
+                            variant={flow.status === 'active' ? 'default' : 'secondary'}
+                            className={flow.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
+                          >
+                            {flow.status === 'active' ? 'Ativo' : 'Pausado'}
+                          </Badge>
+                          <Button size="sm" variant="ghost">
+                            <Eye className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost">
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost">
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Play className="w-5 h-5 mr-2" />
+                  Ações Rápidas
+                </CardTitle>
+                <CardDescription>
+                  Crie automações comuns rapidamente
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <Button className="w-full justify-start" variant="outline">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Boas-vindas Automática
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Filter className="w-4 h-4 mr-2" />
+                    Classificação de Mensagens
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Timer className="w-4 h-4 mr-2" />
+                    Follow-up de Vendas
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Brain className="w-4 h-4 mr-2" />
+                    Suporte com IA
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Webhook className="w-4 h-4 mr-2" />
+                    Integração Externa
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* AI Integration Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Brain className="w-5 h-5 mr-2" />
+                Integração com IA (Gemini)
+              </CardTitle>
+              <CardDescription>
+                Recursos de inteligência artificial disponíveis
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-medium mb-2">Classificação de Mensagens</h4>
+                  <p className="text-sm text-gray-600">
+                    Classifica automaticamente as mensagens recebidas por intenção
+                  </p>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-medium mb-2">Respostas Inteligentes</h4>
+                  <p className="text-sm text-gray-600">
+                    Gera respostas contextualizadas baseadas no histórico
+                  </p>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-medium mb-2">Análise de Sentimento</h4>
+                  <p className="text-sm text-gray-600">
+                    Analisa o sentimento das mensagens para melhor atendimento
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="templates">
+          <Card>
+            <CardHeader>
+              <CardTitle>Templates de Automação</CardTitle>
+              <CardDescription>
+                Templates pré-configurados para criar fluxos rapidamente
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Em desenvolvimento...</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analytics de Automação</CardTitle>
+              <CardDescription>
+                Métricas e insights sobre seus fluxos de automação
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Em desenvolvimento...</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 };
 
 export default Automation;
