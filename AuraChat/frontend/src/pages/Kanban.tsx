@@ -1,309 +1,511 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/layout/Sidebar';
-import Header from '../components/layout/Header';
-import Window from '../components/layout/Window';
-import { useAuth } from '../contexts/AuthContext';
-import '../styles/theme.css';
+import React, { useState, useCallback } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Plus, 
+  Settings, 
+  BarChart3, 
+  Users, 
+  Calendar,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Star,
+  Filter,
+  Search,
+  Download,
+  Upload
+} from 'lucide-react';
+import KanbanBoard from '@/components/kanban/KanbanBoard';
+import { KanbanBoard as KanbanBoardType, KanbanCard, KanbanColumn } from '@/types/kanban';
 
 const Kanban: React.FC = () => {
-  const { user } = useAuth();
-  const [boards, setBoards] = useState<any[]>([]);
-  const [currentBoard, setCurrentBoard] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [draggedCard, setDraggedCard] = useState<any>(null);
-  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('boards');
+  const [showBoard, setShowBoard] = useState(false);
+  const [selectedBoard, setSelectedBoard] = useState<KanbanBoardType | null>(null);
 
-  useEffect(() => {
-    // Simulação de carregamento de dados
-    const fetchKanbanData = async () => {
-      try {
-        // Em produção, isso seria uma chamada real à API
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const mockBoards = [
+  // Dados mockados para demonstração
+  const mockBoard: KanbanBoardType = {
+    id: 'board_1',
+    name: 'Projeto AuraChat',
+    description: 'Desenvolvimento do sistema de automação WhatsApp',
+    columns: [
+      {
+        id: 'col_1',
+        title: 'A Fazer',
+        description: 'Tarefas pendentes',
+        color: '#ef4444',
+        cards: [
           {
-            id: 1,
-            name: 'Atendimento ao Cliente',
-            columns: [
-              {
-                id: 'col-1',
-                title: 'Novos',
-                cards: [
-                  { id: 'card-1', title: 'Problema com entrega', description: 'Cliente não recebeu o produto', labels: ['urgente'], assignee: 'Maria' },
-                  { id: 'card-2', title: 'Dúvida sobre produto', description: 'Cliente com dúvidas sobre funcionalidades', labels: ['suporte'], assignee: 'João' }
-                ]
-              },
-              {
-                id: 'col-2',
-                title: 'Em Andamento',
-                cards: [
-                  { id: 'card-3', title: 'Solicitação de reembolso', description: 'Cliente deseja cancelar compra', labels: ['financeiro'], assignee: 'Ana' },
-                  { id: 'card-4', title: 'Troca de produto', description: 'Produto com defeito', labels: ['logística'], assignee: 'Pedro' }
-                ]
-              },
-              {
-                id: 'col-3',
-                title: 'Concluídos',
-                cards: [
-                  { id: 'card-5', title: 'Atualização de cadastro', description: 'Cliente atualizou informações', labels: ['admin'], assignee: 'Carlos' },
-                  { id: 'card-6', title: 'Elogio ao atendimento', description: 'Cliente satisfeito com suporte', labels: ['feedback'], assignee: 'Maria' }
-                ]
-              }
-            ]
+            id: 'card_1',
+            title: 'Implementar Gemini AI',
+            description: 'Integrar IA do Google para automações',
+            priority: 'high',
+            status: 'todo',
+            assignee: 'João Silva',
+            dueDate: new Date('2024-01-15'),
+            tags: ['AI', 'Backend'],
+            createdAt: new Date('2024-01-10'),
+            updatedAt: new Date('2024-01-10'),
+            position: 0
           },
           {
-            id: 2,
-            name: 'Desenvolvimento de Produto',
-            columns: [
-              {
-                id: 'col-4',
-                title: 'Backlog',
-                cards: [
-                  { id: 'card-7', title: 'Integração com API', description: 'Conectar com serviço externo', labels: ['técnico'], assignee: 'Lucas' },
-                  { id: 'card-8', title: 'Melhorar performance', description: 'Otimizar carregamento de página', labels: ['técnico'], assignee: 'Julia' }
-                ]
-              },
-              {
-                id: 'col-5',
-                title: 'Em Desenvolvimento',
-                cards: [
-                  { id: 'card-9', title: 'Nova interface', description: 'Redesign da tela principal', labels: ['design'], assignee: 'Mariana' }
-                ]
-              },
-              {
-                id: 'col-6',
-                title: 'Testes',
-                cards: [
-                  { id: 'card-10', title: 'Testes de integração', description: 'Verificar fluxos completos', labels: ['qa'], assignee: 'Rafael' }
-                ]
-              },
-              {
-                id: 'col-7',
-                title: 'Concluído',
-                cards: [
-                  { id: 'card-11', title: 'Correção de bugs', description: 'Resolver problemas reportados', labels: ['bug'], assignee: 'Felipe' }
-                ]
-              }
-            ]
+            id: 'card_2',
+            title: 'Criar Sistema Kanban',
+            description: 'Desenvolver interface drag & drop',
+            priority: 'urgent',
+            status: 'todo',
+            assignee: 'Maria Santos',
+            dueDate: new Date('2024-01-12'),
+            tags: ['Frontend', 'UI/UX'],
+            createdAt: new Date('2024-01-09'),
+            updatedAt: new Date('2024-01-09'),
+            position: 1
           }
-        ];
-        
-        setBoards(mockBoards);
-        setCurrentBoard(mockBoards[0]);
-      } catch (error) {
-        console.error('Erro ao carregar dados do kanban:', error);
-      } finally {
-        setIsLoading(false);
+        ],
+        position: 0
+      },
+      {
+        id: 'col_2',
+        title: 'Em Progresso',
+        description: 'Tarefas em desenvolvimento',
+        color: '#f59e0b',
+        cards: [
+          {
+            id: 'card_3',
+            title: 'WhatsApp Integration',
+            description: 'Conectar com API do WhatsApp',
+            priority: 'high',
+            status: 'in_progress',
+            assignee: 'Pedro Costa',
+            dueDate: new Date('2024-01-20'),
+            tags: ['WhatsApp', 'API'],
+            createdAt: new Date('2024-01-08'),
+            updatedAt: new Date('2024-01-11'),
+            position: 0
+          }
+        ],
+        position: 1
+      },
+      {
+        id: 'col_3',
+        title: 'Em Revisão',
+        description: 'Tarefas aguardando revisão',
+        color: '#3b82f6',
+        cards: [
+          {
+            id: 'card_4',
+            title: 'Design System',
+            description: 'Criar biblioteca de componentes',
+            priority: 'medium',
+            status: 'review',
+            assignee: 'Ana Oliveira',
+            dueDate: new Date('2024-01-18'),
+            tags: ['Design', 'Frontend'],
+            createdAt: new Date('2024-01-07'),
+            updatedAt: new Date('2024-01-10'),
+            position: 0
+          }
+        ],
+        position: 2
+      },
+      {
+        id: 'col_4',
+        title: 'Concluído',
+        description: 'Tarefas finalizadas',
+        color: '#10b981',
+        cards: [
+          {
+            id: 'card_5',
+            title: 'Setup do Projeto',
+            description: 'Configurar ambiente de desenvolvimento',
+            priority: 'low',
+            status: 'done',
+            assignee: 'Carlos Lima',
+            dueDate: new Date('2024-01-05'),
+            tags: ['Setup', 'DevOps'],
+            createdAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-05'),
+            position: 0
+          }
+        ],
+        position: 3
       }
-    };
-    
-    fetchKanbanData();
+    ],
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-11'),
+    isActive: true,
+    settings: {
+      allowCardCreation: true,
+      allowCardEditing: true,
+      allowCardDeletion: true,
+      allowColumnEditing: true,
+      showDueDates: true,
+      showPriority: true,
+      showTags: true
+    }
+  };
+
+  const boards = [
+    {
+      id: 'board_1',
+      name: 'Projeto AuraChat',
+      description: 'Desenvolvimento do sistema de automação WhatsApp',
+      totalCards: 5,
+      completedCards: 1,
+      progress: 20,
+      lastUpdated: '2 horas atrás'
+    },
+    {
+      id: 'board_2',
+      name: 'Marketing Digital',
+      description: 'Campanhas e estratégias de marketing',
+      totalCards: 12,
+      completedCards: 8,
+      progress: 67,
+      lastUpdated: '1 dia atrás'
+    },
+    {
+      id: 'board_3',
+      name: 'Suporte ao Cliente',
+      description: 'Tickets e atendimento ao cliente',
+      totalCards: 8,
+      completedCards: 6,
+      progress: 75,
+      lastUpdated: '3 horas atrás'
+    }
+  ];
+
+  const stats = {
+    totalBoards: 3,
+    totalCards: 25,
+    completedCards: 15,
+    overdueCards: 2,
+    averageCompletionTime: 3.2 // dias
+  };
+
+  const handleOpenBoard = (board: KanbanBoardType) => {
+    setSelectedBoard(board);
+    setShowBoard(true);
+  };
+
+  const handleUpdateBoard = useCallback((updatedBoard: KanbanBoardType) => {
+    setSelectedBoard(updatedBoard);
+    // Aqui você salvaria no backend
+    console.log('Board atualizado:', updatedBoard);
   }, []);
 
-  const handleDragStart = (card: any) => {
-    setDraggedCard(card);
-  };
+  const handleAddCard = useCallback((columnId: string, card: KanbanCard) => {
+    if (selectedBoard) {
+      const updatedBoard = {
+        ...selectedBoard,
+        columns: selectedBoard.columns.map(col =>
+          col.id === columnId 
+            ? { ...col, cards: [...col.cards, card] }
+            : col
+        )
+      };
+      setSelectedBoard(updatedBoard);
+    }
+  }, [selectedBoard]);
 
-  const handleDragOver = (e: React.DragEvent, columnId: string) => {
-    e.preventDefault();
-    setDragOverColumn(columnId);
-  };
+  const handleUpdateCard = useCallback((cardId: string, updates: Partial<KanbanCard>) => {
+    if (selectedBoard) {
+      const updatedBoard = {
+        ...selectedBoard,
+        columns: selectedBoard.columns.map(col => ({
+          ...col,
+          cards: col.cards.map(card =>
+            card.id === cardId ? { ...card, ...updates, updatedAt: new Date() } : card
+          )
+        }))
+      };
+      setSelectedBoard(updatedBoard);
+    }
+  }, [selectedBoard]);
 
-  const handleDrop = (e: React.DragEvent, columnId: string) => {
-    e.preventDefault();
-    
-    if (!draggedCard) return;
-    
-    // Cria uma cópia do quadro atual
-    const updatedBoard = { ...currentBoard };
-    
-    // Encontra a coluna de origem e remove o card
-    let sourceColumnIndex = -1;
-    let cardIndex = -1;
-    
-    updatedBoard.columns.forEach((column: any, colIndex: number) => {
-      const index = column.cards.findIndex((c: any) => c.id === draggedCard.id);
-      if (index !== -1) {
-        sourceColumnIndex = colIndex;
-        cardIndex = index;
+  const handleDeleteCard = useCallback((cardId: string) => {
+    if (selectedBoard) {
+      const updatedBoard = {
+        ...selectedBoard,
+        columns: selectedBoard.columns.map(col => ({
+          ...col,
+          cards: col.cards.filter(card => card.id !== cardId)
+        }))
+      };
+      setSelectedBoard(updatedBoard);
+    }
+  }, [selectedBoard]);
+
+  const handleMoveCard = useCallback((
+    cardId: string, 
+    sourceColumnId: string, 
+    targetColumnId: string, 
+    position: number
+  ) => {
+    if (selectedBoard) {
+      const sourceColumn = selectedBoard.columns.find(col => col.id === sourceColumnId);
+      const targetColumn = selectedBoard.columns.find(col => col.id === targetColumnId);
+      
+      if (sourceColumn && targetColumn) {
+        const card = sourceColumn.cards.find(c => c.id === cardId);
+        if (card) {
+          const updatedBoard = {
+            ...selectedBoard,
+            columns: selectedBoard.columns.map(col => {
+              if (col.id === sourceColumnId) {
+                return { ...col, cards: col.cards.filter(c => c.id !== cardId) };
+              }
+              if (col.id === targetColumnId) {
+                const newCards = [...col.cards];
+                newCards.splice(position, 0, { ...card, position });
+                return { ...col, cards: newCards };
+              }
+              return col;
+            })
+          };
+          setSelectedBoard(updatedBoard);
+        }
       }
-    });
-    
-    if (sourceColumnIndex === -1 || cardIndex === -1) return;
-    
-    // Remove o card da coluna de origem
-    const card = updatedBoard.columns[sourceColumnIndex].cards.splice(cardIndex, 1)[0];
-    
-    // Encontra a coluna de destino e adiciona o card
-    const targetColumnIndex = updatedBoard.columns.findIndex((col: any) => col.id === columnId);
-    if (targetColumnIndex !== -1) {
-      updatedBoard.columns[targetColumnIndex].cards.push(card);
     }
-    
-    // Atualiza o estado
-    setCurrentBoard(updatedBoard);
-    setDraggedCard(null);
-    setDragOverColumn(null);
-  };
+  }, [selectedBoard]);
 
-  const handleDragEnd = () => {
-    setDragOverColumn(null);
-  };
-
-  const switchBoard = (boardId: number) => {
-    const board = boards.find(b => b.id === boardId);
-    if (board) {
-      setCurrentBoard(board);
-    }
-  };
-
-  const getLabelColor = (label: string) => {
-    const colors: {[key: string]: string} = {
-      'urgente': 'leopard-label-red',
-      'suporte': 'leopard-label-blue',
-      'financeiro': 'leopard-label-green',
-      'logística': 'leopard-label-orange',
-      'admin': 'leopard-label-purple',
-      'feedback': 'leopard-label-teal',
-      'técnico': 'leopard-label-gray',
-      'design': 'leopard-label-pink',
-      'qa': 'leopard-label-indigo',
-      'bug': 'leopard-label-red'
-    };
-    
-    return colors[label] || 'leopard-label-gray';
-  };
+  if (showBoard && selectedBoard) {
+    return (
+      <div className="h-screen">
+        <div className="bg-white border-b p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowBoard(false)}
+              >
+                ← Voltar
+              </Button>
+              <div>
+                <h1 className="text-xl font-bold">{selectedBoard.name}</h1>
+                <p className="text-sm text-gray-600">{selectedBoard.description}</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm">
+                <Download className="w-4 h-4 mr-2" />
+                Exportar
+              </Button>
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" />
+                Configurações
+              </Button>
+            </div>
+          </div>
+        </div>
+        <KanbanBoard
+          board={selectedBoard}
+          onUpdateBoard={handleUpdateBoard}
+          onAddCard={handleAddCard}
+          onUpdateCard={handleUpdateCard}
+          onDeleteCard={handleDeleteCard}
+          onMoveCard={handleMoveCard}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="leopard-app-container">
-      <Sidebar />
-      
-      <div className="leopard-main-content">
-        <Header 
-          title="Kanban" 
-          username={user?.name} 
-          userAvatar={user?.avatar}
-        />
-        
-        <div className="leopard-kanban-content">
-          {isLoading ? (
-            <div className="leopard-loading">Carregando...</div>
-          ) : (
-            <>
-              <div className="leopard-kanban-header">
-                <div className="leopard-kanban-board-selector">
-                  <select 
-                    value={currentBoard?.id} 
-                    onChange={(e) => switchBoard(Number(e.target.value))}
-                    className="leopard-select"
-                  >
-                    {boards.map(board => (
-                      <option key={board.id} value={board.id}>{board.name}</option>
-                    ))}
-                  </select>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Kanban</h1>
+          <p className="text-gray-600">Gerencie projetos e tarefas com quadros visuais</p>
+        </div>
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => handleOpenBoard(mockBoard)}
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Quadro
+        </Button>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="boards">Quadros</TabsTrigger>
+          <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="boards" className="space-y-6">
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <BarChart3 className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Total de Quadros</p>
+                    <p className="text-2xl font-bold">{stats.totalBoards}</p>
+                  </div>
                 </div>
-                
-                <div className="leopard-kanban-actions">
-                  <button className="leopard-button">
-                    <i className="ph-plus"></i> Novo Card
-                  </button>
-                  <button className="leopard-button">
-                    <i className="ph-columns"></i> Nova Coluna
-                  </button>
-                  <button className="leopard-button">
-                    <i className="ph-gear"></i> Configurações
-                  </button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-8 h-8 text-green-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Total de Cards</p>
+                    <p className="text-2xl font-bold">{stats.totalCards}</p>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="leopard-kanban-board">
-                {currentBoard?.columns.map((column: any) => (
-                  <div 
-                    key={column.id} 
-                    className={`leopard-kanban-column ${dragOverColumn === column.id ? 'leopard-kanban-column-drag-over' : ''}`}
-                    onDragOver={(e) => handleDragOver(e, column.id)}
-                    onDrop={(e) => handleDrop(e, column.id)}
-                  >
-                    <div className="leopard-kanban-column-header">
-                      <h3 className="leopard-kanban-column-title">{column.title}</h3>
-                      <span className="leopard-kanban-column-count">{column.cards.length}</span>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Concluídos</p>
+                    <p className="text-2xl font-bold">{stats.completedCards}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-8 h-8 text-red-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Atrasados</p>
+                    <p className="text-2xl font-bold">{stats.overdueCards}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-8 h-8 text-orange-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">Tempo Médio</p>
+                    <p className="text-2xl font-bold">{stats.averageCompletionTime}d</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Boards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {boards.map((board) => (
+              <Card 
+                key={board.id} 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => handleOpenBoard(mockBoard)}
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">{board.name}</CardTitle>
+                      <CardDescription className="mt-1">
+                        {board.description}
+                      </CardDescription>
                     </div>
-                    
-                    <div className="leopard-kanban-cards">
-                      {column.cards.map((card: any) => (
-                        <div 
-                          key={card.id} 
-                          className="leopard-kanban-card"
-                          draggable
-                          onDragStart={() => handleDragStart(card)}
-                          onDragEnd={handleDragEnd}
-                        >
-                          <div className="leopard-kanban-card-header">
-                            <h4 className="leopard-kanban-card-title">{card.title}</h4>
-                            <div className="leopard-kanban-card-menu">
-                              <i className="ph-dots-three-vertical"></i>
-                            </div>
-                          </div>
-                          
-                          <div className="leopard-kanban-card-description">
-                            {card.description}
-                          </div>
-                          
-                          <div className="leopard-kanban-card-labels">
-                            {card.labels.map((label: string, index: number) => (
-                              <span 
-                                key={index} 
-                                className={`leopard-kanban-card-label ${getLabelColor(label)}`}
-                              >
-                                {label}
-                              </span>
-                            ))}
-                          </div>
-                          
-                          <div className="leopard-kanban-card-footer">
-                            <div className="leopard-kanban-card-assignee">
-                              <div className="leopard-kanban-card-avatar">
-                                {card.assignee.charAt(0)}
-                              </div>
-                              <span className="leopard-kanban-card-assignee-name">
-                                {card.assignee}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                    <Button variant="ghost" size="sm">
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Progresso</span>
+                      <span className="font-medium">{board.progress}%</span>
                     </div>
-                    
-                    <div className="leopard-kanban-column-footer">
-                      <button className="leopard-kanban-add-card">
-                        <i className="ph-plus"></i> Adicionar Card
-                      </button>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-blue-600 h-2 rounded-full" 
+                        style={{ width: `${board.progress}%` }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>{board.totalCards} cards</span>
+                      <span>{board.completedCards} concluídos</span>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Atualizado {board.lastUpdated}
                     </div>
                   </div>
-                ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="templates">
+          <Card>
+            <CardHeader>
+              <CardTitle>Templates de Quadros</CardTitle>
+              <CardDescription>
+                Templates pré-configurados para criar quadros rapidamente
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="cursor-pointer hover:shadow-md">
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-2">Desenvolvimento de Software</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Quadro para projetos de desenvolvimento com colunas: Backlog, Em Desenvolvimento, Teste, Produção
+                    </p>
+                    <Button size="sm" className="w-full">
+                      Usar Template
+                    </Button>
+                  </CardContent>
+                </Card>
+                <Card className="cursor-pointer hover:shadow-md">
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-2">Marketing Digital</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Quadro para campanhas de marketing com colunas: Ideação, Em Criação, Em Revisão, Publicado
+                    </p>
+                    <Button size="sm" className="w-full">
+                      Usar Template
+                    </Button>
+                  </CardContent>
+                </Card>
+                <Card className="cursor-pointer hover:shadow-md">
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-2">Suporte ao Cliente</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Quadro para tickets de suporte com colunas: Novo, Em Análise, Em Andamento, Resolvido
+                    </p>
+                    <Button size="sm" className="w-full">
+                      Usar Template
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
-            </>
-          )}
-        </div>
-      </div>
-      
-      <div className="leopard-dock">
-        <div className="leopard-dock-item">
-          <img src="/logo.png" alt="Aura" />
-        </div>
-        <div className="leopard-dock-item">
-          <i className="ph-chat-centered-text ph-fill"></i>
-        </div>
-        <div className="leopard-dock-item">
-          <i className="ph-users ph-fill"></i>
-        </div>
-        <div className="leopard-dock-item">
-          <i className="ph-chart-line ph-fill"></i>
-        </div>
-        <div className="leopard-dock-item">
-          <i className="ph-gear ph-fill"></i>
-        </div>
-      </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analytics de Produtividade</CardTitle>
+              <CardDescription>
+                Métricas e insights sobre seus quadros Kanban
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Em desenvolvimento...</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

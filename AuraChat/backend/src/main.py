@@ -14,6 +14,7 @@ from routes.auth import auth_bp
 from routes.chat_simple import chat_bp
 from routes.contact_simple import contact_bp
 from routes.whatsapp import whatsapp_bp
+from routes.ai import ai_bp
 
 # Configuração de logging
 logging.basicConfig(
@@ -57,6 +58,7 @@ app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(chat_bp, url_prefix='/api/chat')
 app.register_blueprint(contact_bp, url_prefix='/api/contact')
 app.register_blueprint(whatsapp_bp, url_prefix='/api/whatsapp')
+app.register_blueprint(ai_bp, url_prefix='/api/ai')
 
 # Rota de verificação de saúde
 @app.route("/api/health", methods=["GET"])
@@ -71,7 +73,8 @@ def health_check():
             "auth": "active",
             "chat": "active",
             "contact": "active",
-            "whatsapp": "active"
+            "whatsapp": "active",
+            "ai": "active"
         }
     })
 
