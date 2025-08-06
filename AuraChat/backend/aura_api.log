@@ -1,0 +1,137 @@
+2025-08-05 10:27:53,523 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:27:53,530 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 10:27:53,530 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 10:27:53,530 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 10:27:53,857 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:27:53,861 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 10:27:53,861 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 10:43:05,701 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:43:05,706 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 10:43:05,707 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 10:43:05,707 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 10:43:06,038 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:43:06,042 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 10:43:06,042 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 10:58:58,359 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:58:58,365 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 10:58:58,365 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 10:58:58,365 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 10:58:58,664 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:58:58,667 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 10:58:58,668 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 10:59:15,390 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:59:15,390 - __main__ - ERROR - Failed to start Flask app: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+Traceback (most recent call last):
+  File "/workspace/AuraChat/backend/src/main_simple.py", line 107, in <module>
+    socketio.run(app, host="0.0.0.0", port=port, debug=debug)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/AuraChat/backend/venv/lib/python3.13/site-packages/flask_socketio/__init__.py", line 650, in run
+    raise RuntimeError('The Werkzeug web server is not '
+    ...<2 lines>...
+                       'run() method to disable this error.')
+RuntimeError: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+2025-08-05 10:59:29,302 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:59:29,302 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 10:59:29,307 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 10:59:29,307 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 10:59:29,307 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 10:59:29,597 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 10:59:29,597 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 10:59:29,600 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 10:59:29,601 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 10:59:34,117 - __main__ - INFO - Health check endpoint called.
+2025-08-05 10:59:34,118 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 10:59:34] "GET /api/health HTTP/1.1" 200 -
+2025-08-05 10:59:37,271 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 10:59:37] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-05 11:00:16,731 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/main_simple.py', reloading
+2025-08-05 11:00:16,826 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:00:17,117 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:00:17,117 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:00:17,121 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:00:17,121 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:00:21,138 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/main_simple.py', reloading
+2025-08-05 11:00:21,217 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:00:21,501 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:00:21,502 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:00:21,505 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:00:21,505 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:00:23,516 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/main_simple.py', reloading
+2025-08-05 11:00:23,590 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:00:23,877 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:00:23,877 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:00:23,880 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:00:23,880 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:00:26,758 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:00:26,758 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:00:26,763 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 11:00:26,763 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 11:00:26,763 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:00:27,054 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:00:27,054 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:00:27,057 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:00:27,057 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:00:31,527 - __main__ - INFO - Health check endpoint called.
+2025-08-05 11:00:31,528 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:00:31] "GET /api/health HTTP/1.1" 200 -
+2025-08-05 11:00:35,420 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:00:35] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-05 11:00:41,395 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:00:41] "GET /api/chat/stats HTTP/1.1" 200 -
+2025-08-05 11:01:26,225 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/main_simple.py', reloading
+2025-08-05 11:01:26,323 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:01:26,614 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:26,615 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:01:26,618 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:01:26,618 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:01:30,636 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/main_simple.py', reloading
+2025-08-05 11:01:30,718 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:01:31,009 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:31,009 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:01:31,013 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:01:31,013 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:01:34,026 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/main_simple.py', reloading
+2025-08-05 11:01:34,104 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:01:34,389 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:34,389 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:01:34,392 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:01:34,393 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:01:39,629 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:39,629 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:01:39,634 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.0.2:5000
+2025-08-05 11:01:39,634 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-05 11:01:39,634 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 11:01:39,929 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 11:01:39,930 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 11:01:39,933 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 11:01:39,933 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 11:01:42,659 - __main__ - INFO - Health check endpoint called.
+2025-08-05 11:01:42,659 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:01:42] "GET /api/health HTTP/1.1" 200 -
+2025-08-05 11:01:51,758 - routes.contact_simple - INFO - Retrieved 0 contacts (page 1, limit 20, search: ''). Total: 0
+2025-08-05 11:01:51,759 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:01:51] "GET /api/contact/contacts HTTP/1.1" 200 -
+2025-08-05 11:02:00,066 - routes.contact_simple - INFO - Created new contact: 73020413-bb58-46be-88d9-2a30aea6b2ab
+2025-08-05 11:02:00,066 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:02:00] "[35m[1mPOST /api/contact/contacts HTTP/1.1[0m" 201 -
+2025-08-05 11:02:06,132 - routes.contact_simple - INFO - Retrieved 1 contacts (page 1, limit 20, search: ''). Total: 1
+2025-08-05 11:02:06,132 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 11:02:06] "GET /api/contact/contacts HTTP/1.1" 200 -
+2025-08-05 14:09:21,977 - werkzeug - INFO -  * Detected change in '/workspace/AuraChat/backend/src/routes/whatsapp.py', reloading
+2025-08-05 14:09:22,165 - werkzeug - INFO -  * Restarting with stat
+2025-08-05 14:09:22,534 - __main__ - INFO - Iniciando Aura API na porta 5000, modo desenvolvimento
+2025-08-05 14:09:22,534 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2025-08-05 14:09:22,539 - werkzeug - WARNING -  * Debugger is active!
+2025-08-05 14:09:22,539 - werkzeug - INFO -  * Debugger PIN: 194-369-897
+2025-08-05 14:11:14,152 - __main__ - INFO - Health check endpoint called.
+2025-08-05 14:11:14,153 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 14:11:14] "GET /api/health HTTP/1.1" 200 -
+2025-08-05 14:11:16,221 - werkzeug - INFO - 127.0.0.1 - - [05/Aug/2025 14:11:16] "[33mGET /api/whatsapp/health HTTP/1.1[0m" 404 -

@@ -1,0 +1,11 @@
+flask
+flask-cors
+flask-jwt-extended
+python-dotenv
+flask-socketio
+SQLAlchemy
+psycopg2-binary
+alembic
+gunicorn
+
+requests

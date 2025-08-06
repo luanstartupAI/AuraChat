@@ -1,0 +1,693 @@
+/* 
+ * Tema macOS Leopard para o Projeto Aura
+ * Este arquivo contém as variáveis CSS e definições de estilo baseadas no macOS Leopard
+ */
+
+:root {
+  /* Cores principais */
+  --aura-blue: #0158b7;
+  --aura-blue-light: #3a7abd;
+  --aura-blue-dark: #003d8f;
+  --aura-gray: #d1d5db;
+  --aura-gray-light: #f3f4f6;
+  --aura-gray-dark: #6b7280;
+  --aura-black: #111827;
+  --aura-white: #ffffff;
+  
+  /* Cores de acento */
+  --aura-red: #ef4444;
+  --aura-yellow: #f59e0b;
+  --aura-green: #10b981;
+  --aura-purple: #8b5cf6;
+  
+  /* Cores de interface macOS Leopard */
+  --leopard-window-bg: linear-gradient(to bottom, #f5f5f5, #e2e2e2);
+  --leopard-titlebar-bg: linear-gradient(to bottom, #e2e2e2, #c8c8c8);
+  --leopard-sidebar-bg: linear-gradient(to right, #d8d8d8, #e8e8e8);
+  --leopard-button-bg: linear-gradient(to bottom, #ffffff, #f0f0f0);
+  --leopard-button-hover: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+  --leopard-button-active: linear-gradient(to bottom, #e0e0e0, #d0d0d0);
+  --leopard-blue-button: linear-gradient(to bottom, #4a8df6, #2a5db0);
+  --leopard-blue-button-hover: linear-gradient(to bottom, #5a9df6, #3a6dc0);
+  --leopard-blue-button-active: linear-gradient(to bottom, #3a7dc6, #2a5db0);
+  
+  /* Sombras e reflexos */
+  --leopard-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --leopard-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --leopard-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --leopard-shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --leopard-reflection: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  
+  /* Bordas e arredondamentos */
+  --leopard-border-radius-sm: 3px;
+  --leopard-border-radius-md: 5px;
+  --leopard-border-radius-lg: 8px;
+  --leopard-border-radius-xl: 12px;
+  --leopard-border-color: #c0c0c0;
+  
+  /* Tipografia */
+  --leopard-font-family: -apple-system, BlinkMacSystemFont, "Lucida Grande", "Helvetica Neue", sans-serif;
+  --leopard-font-size-xs: 10px;
+  --leopard-font-size-sm: 12px;
+  --leopard-font-size-md: 14px;
+  --leopard-font-size-lg: 16px;
+  --leopard-font-size-xl: 18px;
+  --leopard-font-size-2xl: 20px;
+  --leopard-font-size-3xl: 24px;
+  
+  /* Espaçamento */
+  --leopard-spacing-xs: 4px;
+  --leopard-spacing-sm: 8px;
+  --leopard-spacing-md: 12px;
+  --leopard-spacing-lg: 16px;
+  --leopard-spacing-xl: 24px;
+  --leopard-spacing-2xl: 32px;
+  
+  /* Transições */
+  --leopard-transition-fast: 150ms ease-in-out;
+  --leopard-transition-normal: 250ms ease-in-out;
+  --leopard-transition-slow: 350ms ease-in-out;
+  
+  /* Z-index */
+  --leopard-z-index-dropdown: 1000;
+  --leopard-z-index-sticky: 1100;
+  --leopard-z-index-fixed: 1200;
+  --leopard-z-index-modal-backdrop: 1300;
+  --leopard-z-index-modal: 1400;
+  --leopard-z-index-popover: 1500;
+  --leopard-z-index-tooltip: 1600;
+}
+
+/* Estilos globais */
+body {
+  font-family: var(--leopard-font-family);
+  font-size: var(--leopard-font-size-md);
+  color: var(--aura-black);
+  background-color: var(--aura-gray-light);
+  margin: 0;
+  padding: 0;
+}
+
+/* Janelas estilo macOS Leopard */
+.leopard-window {
+  background: var(--leopard-window-bg);
+  border: 1px solid var(--leopard-border-color);
+  border-radius: var(--leopard-border-radius-md);
+  box-shadow: var(--leopard-shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.leopard-window-titlebar {
+  background: var(--leopard-titlebar-bg);
+  height: 22px;
+  padding: 0 var(--leopard-spacing-sm);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--leopard-border-color);
+}
+
+.leopard-window-buttons {
+  display: flex;
+  gap: 6px;
+  margin-right: var(--leopard-spacing-md);
+}
+
+.leopard-window-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.leopard-window-button-close {
+  background-color: var(--aura-red);
+}
+
+.leopard-window-button-minimize {
+  background-color: var(--aura-yellow);
+}
+
+.leopard-window-button-maximize {
+  background-color: var(--aura-green);
+}
+
+.leopard-window-title {
+  font-size: var(--leopard-font-size-sm);
+  font-weight: 500;
+  color: var(--aura-gray-dark);
+  text-align: center;
+  flex-grow: 1;
+}
+
+.leopard-window-content {
+  padding: var(--leopard-spacing-md);
+}
+
+/* Sidebar estilo macOS Leopard */
+.leopard-sidebar {
+  background: var(--leopard-sidebar-bg);
+  width: 200px;
+  border-right: 1px solid var(--leopard-border-color);
+  padding: var(--leopard-spacing-md) 0;
+}
+
+.leopard-sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: var(--leopard-spacing-sm) var(--leopard-spacing-md);
+  color: var(--aura-gray-dark);
+  text-decoration: none;
+  font-size: var(--leopard-font-size-md);
+  transition: background-color var(--leopard-transition-fast);
+}
+
+.leopard-sidebar-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.leopard-sidebar-item.active {
+  background-color: var(--aura-blue-light);
+  color: var(--aura-white);
+}
+
+.leopard-sidebar-icon {
+  margin-right: var(--leopard-spacing-sm);
+  font-size: var(--leopard-font-size-lg);
+}
+
+/* Botões estilo macOS Leopard */
+.leopard-button {
+  background: var(--leopard-button-bg);
+  border: 1px solid var(--leopard-border-color);
+  border-radius: var(--leopard-border-radius-md);
+  padding: var(--leopard-spacing-xs) var(--leopard-spacing-md);
+  font-size: var(--leopard-font-size-md);
+  color: var(--aura-black);
+  cursor: pointer;
+  transition: all var(--leopard-transition-fast);
+  box-shadow: var(--leopard-shadow-sm);
+}
+
+.leopard-button:hover {
+  background: var(--leopard-button-hover);
+}
+
+.leopard-button:active {
+  background: var(--leopard-button-active);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.leopard-button-primary {
+  background: var(--leopard-blue-button);
+  border-color: var(--aura-blue-dark);
+  color: var(--aura-white);
+}
+
+.leopard-button-primary:hover {
+  background: var(--leopard-blue-button-hover);
+}
+
+.leopard-button-primary:active {
+  background: var(--leopard-blue-button-active);
+}
+
+/* Inputs estilo macOS Leopard */
+.leopard-input {
+  background-color: var(--aura-white);
+  border: 1px solid var(--leopard-border-color);
+  border-radius: var(--leopard-border-radius-sm);
+  padding: var(--leopard-spacing-xs) var(--leopard-spacing-sm);
+  font-size: var(--leopard-font-size-md);
+  color: var(--aura-black);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color var(--leopard-transition-fast);
+}
+
+.leopard-input:focus {
+  border-color: var(--aura-blue);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(1, 88, 183, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Dock estilo macOS Leopard */
+.leopard-dock {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: var(--leopard-border-radius-lg);
+  padding: var(--leopard-spacing-xs);
+  display: flex;
+  justify-content: center;
+  gap: var(--leopard-spacing-sm);
+  box-shadow: var(--leopard-shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.leopard-dock-item {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--leopard-border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--leopard-transition-fast);
+  position: relative;
+}
+
+.leopard-dock-item:hover {
+  transform: scale(1.1);
+}
+
+.leopard-dock-item img {
+  width: 42px;
+  height: 42px;
+}
+
+.leopard-dock-indicator {
+  position: absolute;
+  bottom: -5px;
+  width: 4px;
+  height: 4px;
+  background-color: var(--aura-blue);
+  border-radius: 50%;
+}
+
+/* Cards estilo macOS Leopard */
+.leopard-card {
+  background: var(--aura-white);
+  border-radius: var(--leopard-border-radius-md);
+  box-shadow: var(--leopard-shadow-md);
+  overflow: hidden;
+  border: 1px solid var(--leopard-border-color);
+}
+
+.leopard-card-header {
+  padding: var(--leopard-spacing-md);
+  border-bottom: 1px solid var(--leopard-border-color);
+  background: var(--leopard-titlebar-bg);
+}
+
+.leopard-card-title {
+  margin: 0;
+  font-size: var(--leopard-font-size-lg);
+  font-weight: 500;
+}
+
+.leopard-card-content {
+  padding: var(--leopard-spacing-md);
+}
+
+.leopard-card-footer {
+  padding: var(--leopard-spacing-md);
+  border-top: 1px solid var(--leopard-border-color);
+  background: var(--leopard-window-bg);
+}
+
+/* Tabs estilo macOS Leopard */
+.leopard-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--leopard-border-color);
+  background: var(--leopard-titlebar-bg);
+}
+
+.leopard-tab {
+  padding: var(--leopard-spacing-sm) var(--leopard-spacing-md);
+  cursor: pointer;
+  font-size: var(--leopard-font-size-md);
+  color: var(--aura-gray-dark);
+  border-right: 1px solid var(--leopard-border-color);
+  transition: background-color var(--leopard-transition-fast);
+}
+
+.leopard-tab:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.leopard-tab.active {
+  background-color: var(--aura-white);
+  color: var(--aura-blue);
+  border-bottom: 2px solid var(--aura-blue);
+  margin-bottom: -1px;
+}
+
+/* Dropdown estilo macOS Leopard */
+.leopard-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.leopard-dropdown-toggle {
+  background: var(--leopard-button-bg);
+  border: 1px solid var(--leopard-border-color);
+  border-radius: var(--leopard-border-radius-md);
+  padding: var(--leopard-spacing-xs) var(--leopard-spacing-md);
+  font-size: var(--leopard-font-size-md);
+  color: var(--aura-black);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--leopard-spacing-sm);
+}
+
+.leopard-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--leopard-z-index-dropdown);
+  min-width: 160px;
+  background-color: var(--aura-white);
+  border: 1px solid var(--leopard-border-color);
+  border-radius: var(--leopard-border-radius-md);
+  box-shadow: var(--leopard-shadow-lg);
+  overflow: hidden;
+  display: none;
+}
+
+.leopard-dropdown.open .leopard-dropdown-menu {
+  display: block;
+}
+
+.leopard-dropdown-item {
+  padding: var(--leopard-spacing-sm) var(--leopard-spacing-md);
+  color: var(--aura-black);
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  transition: background-color var(--leopard-transition-fast);
+}
+
+.leopard-dropdown-item:hover {
+  background-color: var(--aura-gray-light);
+}
+
+/* Modais estilo macOS Leopard */
+.leopard-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--leopard-z-index-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leopard-modal {
+  background: var(--leopard-window-bg);
+  border-radius: var(--leopard-border-radius-lg);
+  box-shadow: var(--leopard-shadow-xl);
+  width: 500px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: hidden;
+  z-index: var(--leopard-z-index-modal);
+  display: flex;
+  flex-direction: column;
+}
+
+.leopard-modal-header {
+  background: var(--leopard-titlebar-bg);
+  padding: var(--leopard-spacing-sm) var(--leopard-spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--leopard-border-color);
+}
+
+.leopard-modal-title {
+  font-size: var(--leopard-font-size-lg);
+  font-weight: 500;
+  margin: 0;
+}
+
+.leopard-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--leopard-font-size-xl);
+  color: var(--aura-gray-dark);
+  padding: 0;
+}
+
+.leopard-modal-body {
+  padding: var(--leopard-spacing-md);
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.leopard-modal-footer {
+  padding: var(--leopard-spacing-md);
+  border-top: 1px solid var(--leopard-border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--leopard-spacing-sm);
+  background: var(--leopard-window-bg);
+}
+
+/* Tooltips estilo macOS Leopard */
+.leopard-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.leopard-tooltip-content {
+  position: absolute;
+  z-index: var(--leopard-z-index-tooltip);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--aura-white);
+  padding: var(--leopard-spacing-xs) var(--leopard-spacing-sm);
+  border-radius: var(--leopard-border-radius-sm);
+  font-size: var(--leopard-font-size-sm);
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--leopard-transition-fast);
+}
+
+.leopard-tooltip:hover .leopard-tooltip-content {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Animações */
+@keyframes leopard-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes leopard-scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes leopard-slide-in-right {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes leopard-slide-in-left {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes leopard-slide-in-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes leopard-slide-in-down {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Classes de utilidade para animações */
+.leopard-animate-fade-in {
+  animation: leopard-fade-in var(--leopard-transition-normal) forwards;
+}
+
+.leopard-animate-scale-in {
+  animation: leopard-scale-in var(--leopard-transition-normal) forwards;
+}
+
+.leopard-animate-slide-in-right {
+  animation: leopard-slide-in-right var(--leopard-transition-normal) forwards;
+}
+
+.leopard-animate-slide-in-left {
+  animation: leopard-slide-in-left var(--leopard-transition-normal) forwards;
+}
+
+.leopard-animate-slide-in-up {
+  animation: leopard-slide-in-up var(--leopard-transition-normal) forwards;
+}
+
+.leopard-animate-slide-in-down {
+  animation: leopard-slide-in-down var(--leopard-transition-normal) forwards;
+}
+
+/* Utilitários de layout */
+.leopard-flex {
+  display: flex;
+}
+
+.leopard-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.leopard-items-center {
+  align-items: center;
+}
+
+.leopard-justify-center {
+  justify-content: center;
+}
+
+.leopard-justify-between {
+  justify-content: space-between;
+}
+
+.leopard-gap-xs {
+  gap: var(--leopard-spacing-xs);
+}
+
+.leopard-gap-sm {
+  gap: var(--leopard-spacing-sm);
+}
+
+.leopard-gap-md {
+  gap: var(--leopard-spacing-md);
+}
+
+.leopard-gap-lg {
+  gap: var(--leopard-spacing-lg);
+}
+
+.leopard-p-xs {
+  padding: var(--leopard-spacing-xs);
+}
+
+.leopard-p-sm {
+  padding: var(--leopard-spacing-sm);
+}
+
+.leopard-p-md {
+  padding: var(--leopard-spacing-md);
+}
+
+.leopard-p-lg {
+  padding: var(--leopard-spacing-lg);
+}
+
+.leopard-m-xs {
+  margin: var(--leopard-spacing-xs);
+}
+
+.leopard-m-sm {
+  margin: var(--leopard-spacing-sm);
+}
+
+.leopard-m-md {
+  margin: var(--leopard-spacing-md);
+}
+
+.leopard-m-lg {
+  margin: var(--leopard-spacing-lg);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .leopard-sidebar {
+    width: 60px;
+  }
+  
+  .leopard-sidebar-item-text {
+    display: none;
+  }
+  
+  .leopard-sidebar-icon {
+    margin-right: 0;
+    font-size: var(--leopard-font-size-xl);
+  }
+  
+  .leopard-window {
+    border-radius: 0;
+  }
+}
+
+/* Suporte a temas escuros */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --leopard-window-bg: linear-gradient(to bottom, #2c2c2c, #1c1c1c);
+    --leopard-titlebar-bg: linear-gradient(to bottom, #3c3c3c, #2c2c2c);
+    --leopard-sidebar-bg: linear-gradient(to right, #2c2c2c, #3c3c3c);
+    --leopard-button-bg: linear-gradient(to bottom, #4c4c4c, #3c3c3c);
+    --leopard-button-hover: linear-gradient(to bottom, #5c5c5c, #4c4c4c);
+    --leopard-button-active: linear-gradient(to bottom, #3c3c3c, #2c2c2c);
+    --leopard-border-color: #4c4c4c;
+  }
+  
+  body {
+    color: var(--aura-white);
+    background-color: #1c1c1c;
+  }
+  
+  .leopard-input {
+    background-color: #3c3c3c;
+    color: var(--aura-white);
+  }
+  
+  .leopard-card {
+    background-color: #2c2c2c;
+  }
+  
+  .leopard-dropdown-menu {
+    background-color: #2c2c2c;
+  }
+  
+  .leopard-dropdown-item {
+    color: var(--aura-white);
+  }
+  
+  .leopard-dropdown-item:hover {
+    background-color: #3c3c3c;
+  }
+}
